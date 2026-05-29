@@ -326,7 +326,7 @@ function showMotivationMessage() {
 // ===== SERVICE WORKER =====
 function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('./service-worker.js')
             .then(registration => {
                 console.log('Service Worker ro\'yxatdan o\'tdi:', registration.scope);
             })
@@ -412,8 +412,8 @@ function showNotification(message) {
     if ('Notification' in window && Notification.permission === 'granted') {
         const notification = new Notification('Kundalik Tracker', {
             body: message,
-            icon: 'icon.svg',
-            badge: 'icon.svg',
+            icon: './icon.svg',
+            badge: './icon.svg',
             vibrate: [200, 100, 200],
             tag: 'kundalik-reminder',
             requireInteraction: false

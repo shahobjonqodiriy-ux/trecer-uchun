@@ -2,10 +2,10 @@
   "name": "Kundalik Tracker - Hayot Boshqaruv Tizimi",
   "short_name": "Kundalik Tracker",
   "description": "Kunlik vazifalar, maqsadlar va vaqt boshqaruvi uchun shaxsiy tracker",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
-  "theme_color": "#6366f1",
+  "theme_color": "#10b981",
   "orientation": "portrait",
   "icons": [
     {

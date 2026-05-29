@@ -1,10 +1,11 @@
 const CACHE_NAME = 'kundalik-tracker-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './style.css',
+  './app.js',
+  './manifest.json',
+  './icon.svg'
 ];
 
 // Install event - cache files
@@ -65,7 +66,7 @@ self.addEventListener('fetch', (event) => {
           return response;
         }).catch(() => {
           // Offline fallback
-          return caches.match('/index.html');
+          return caches.match('./index.html');
         });
       })
   );
@@ -75,8 +76,8 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'Kun tartibingizni belgilang!',
-    icon: 'icon.svg',
-    badge: 'icon.svg',
+    icon: './icon.svg',
+    badge: './icon.svg',
     vibrate: [200, 100, 200],
     tag: 'kundalik-reminder',
     requireInteraction: false
