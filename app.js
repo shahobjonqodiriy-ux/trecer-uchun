@@ -412,8 +412,8 @@ function showNotification(message) {
     if ('Notification' in window && Notification.permission === 'granted') {
         const notification = new Notification('Kundalik Tracker', {
             body: message,
-            icon: 'icon-192.png',
-            badge: 'icon-192.png',
+            icon: 'icon.svg',
+            badge: 'icon.svg',
             vibrate: [200, 100, 200],
             tag: 'kundalik-reminder',
             requireInteraction: false

@@ -75,8 +75,8 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'Kun tartibingizni belgilang!',
-    icon: 'icon-192.png',
-    badge: 'icon-192.png',
+    icon: 'icon.svg',
+    badge: 'icon.svg',
     vibrate: [200, 100, 200],
     tag: 'kundalik-reminder',
     requireInteraction: false
