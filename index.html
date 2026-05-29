@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Kundalik Tracker</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Kundalik Tracker</h1>
+            <div class="date-display" id="currentDate"></div>
+        </header>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="completedCount">0</div>
+                <div class="stat-label">Bajarilgan</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalCount">14</div>
+                <div class="stat-label">Jami</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="percentComplete">0%</div>
+                <div class="stat-label">Foiz</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="streakCount">0🔥</div>
+                <div class="stat-label">Streak</div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div class="tasks-section">
+            <h2>📋 Bugungi vazifalar</h2>
+            
+            <div class="task-group">
+                <h3>🌅 ERTALAB (04:30-07:00)</h3>
+                <label class="task-item">
+                    <input type="checkbox" data-task="1">
+                    <span>04:30 da uyg'onish</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="2">
+                    <span>Ertalabki tartib (tahorat, nonushta)</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="3">
+                    <span>Ertalabki sayr (1 soat) 🚶‍♂️</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="4">
+                    <span>Kun rejasini ko'rish</span>
+                </label>
+            </div>
+
+            <div class="task-group">
+                <h3>💼 ISH BLOKI #1 (07:00-12:00)</h3>
+                <label class="task-item">
+                    <input type="checkbox" data-task="5">
+                    <span>Mijozlar bilan aloqa (30 min)</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="6">
+                    <span>Video montaj (3 soat)</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="7">
+                    <span>Instagram kontent/story (30 min)</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="8">
+                    <span>Yangi mijoz qidirish (1 soat)</span>
+                </label>
+            </div>
+
+            <div class="task-group">
+                <h3>🍽️ TUSHLIK (12:00-13:00)</h3>
+                <label class="task-item">
+                    <input type="checkbox" data-task="9">
+                    <span>Tushlik va dam olish</span>
+                </label>
+            </div>
+
+            <div class="task-group">
+                <h3>💼 ISH BLOKI #2 (13:00-17:00)</h3>
+                <label class="task-item">
+                    <input type="checkbox" data-task="10">
+                    <span>Video montaj davomi (3 soat)</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="11">
+                    <span>Portfolio yangilash (30 min)</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="12">
+                    <span>Mijozlar bilan follow-up (30 min)</span>
+                </label>
+            </div>
+
+            <div class="task-group">
+                <h3>🍽️ KECHKI OVQAT (17:00-18:00)</h3>
+                <label class="task-item">
+                    <input type="checkbox" data-task="13">
+                    <span>Kechki ovqat va dam olish</span>
+                </label>
+            </div>
+
+            <div class="task-group">
+                <h3>🚶‍♂️ KECHKI SAYR (18:00-19:00)</h3>
+                <label class="task-item">
+                    <input type="checkbox" data-task="14">
+                    <span>Kechki sayr (1 soat) 🌆</span>
+                </label>
+            </div>
+
+            <div class="task-group">
+                <h3>📚 VIDEOGRAFLIK KURSI (19:00-21:30)</h3>
+                <label class="task-item">
+                    <input type="checkbox" data-task="15">
+                    <span>Kurs darsi (2.5 soat)</span>
+                </label>
+            </div>
+
+            <div class="task-group">
+                <h3>🌙 KECHKI TARTIB (21:30-22:00)</h3>
+                <label class="task-item">
+                    <input type="checkbox" data-task="16">
+                    <span>Ertangi kun rejasi</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="17">
+                    <span>Bugungi natijani belgilash</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox" data-task="18">
+                    <span>22:00 da uxlash</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Monthly Calendar -->
+        <div class="calendar-section">
+            <h2>📅 Iyun 2026</h2>
+            <div class="calendar-grid" id="calendar"></div>
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-color excellent"></span>
+                    <span>80%+ (Ajoyib)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color good"></span>
+                    <span>50-79% (Yaxshi)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color poor"></span>
+                    <span>&lt;50% (Kam)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color rest"></span>
+                    <span>Dam olish</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Statistics -->
+        <div class="monthly-stats">
+            <h2>📊 Oylik statistika</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="monthlyExcellent">0</div>
+                    <div class="stat-label">Ajoyib kunlar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="monthlyGood">0</div>
+                    <div class="stat-label">Yaxshi kunlar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="monthlyPoor">0</div>
+                    <div class="stat-label">Kam kunlar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="longestStreak">0🔥</div>
+                    <div class="stat-label">Eng uzun streak</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Motivation Message -->
+        <div class="motivation-box" id="motivationMessage"></div>
+
+        <!-- Install Button -->
+        <button class="install-button" id="installButton" style="display: none;">
+            📱 Ilovani o'rnatish
+        </button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
