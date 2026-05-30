@@ -13,10 +13,66 @@
     <link rel="icon" type="image/svg+xml" href="icon.svg">
 </head>
 <body>
-    <div class="container">
+    <!-- Auth Screen -->
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <img src="icon.svg" alt="Kundalik Tracker" width="80" height="80">
+                <h1>Kundalik Tracker</h1>
+                <p>Hayot boshqaruv tizimi</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <h2>Kirish</h2>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Parol</label>
+                    <input type="password" id="loginPassword" required placeholder="Parol">
+                </div>
+                <button type="submit" class="btn-primary">Kirish</button>
+                <p class="auth-switch">
+                    Hisobingiz yo'qmi? <a href="#" id="showRegister">Ro'yxatdan o'tish</a>
+                </p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <h2>Ro'yxatdan o'tish</h2>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="registerEmail" required placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Parol</label>
+                    <input type="password" id="registerPassword" required placeholder="Kamida 6 ta belgi">
+                </div>
+                <div class="form-group">
+                    <label>Parolni tasdiqlang</label>
+                    <input type="password" id="registerConfirmPassword" required placeholder="Parolni qayta kiriting">
+                </div>
+                <button type="submit" class="btn-primary">Ro'yxatdan o'tish</button>
+                <p class="auth-switch">
+                    Allaqachon hisobingiz bormi? <a href="#" id="showLogin">Kirish</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="container" style="display: none;">
         <!-- Header -->
         <header class="header">
-            <h1>Kundalik Tracker</h1>
+            <div class="header-content">
+                <h1>Kundalik Tracker</h1>
+                <div class="header-right">
+                    <span class="user-email" id="userEmail"></span>
+                    <button id="logoutButton" class="logout-btn">Chiqish</button>
+                </div>
+            </div>
             <div class="date-display" id="currentDate"></div>
         </header>
 
@@ -209,7 +265,7 @@
             📱 Ilovani o'rnatish
         </button>
     </div>
-
-    <script src="app.js"></script>
+    
+    <script type="module" src="app.js"></script>
 </body>
 </html>

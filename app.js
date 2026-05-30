@@ -1,3 +1,22 @@
+// ===== FIREBASE CONFIG =====
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAykGxSdBf39PNnTKJK4qD9XkzOeD-THyw",
+  authDomain: "planning-with-ai-e2e6c.firebaseapp.com",
+  projectId: "planning-with-ai-e2e6c",
+  storageBucket: "planning-with-ai-e2e6c.firebasestorage.app",
+  messagingSenderId: "107935291408",
+  appId: "1:107935291408:web:06cca2d1842222e0579295"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
 // ===== GLOBAL VARIABLES =====
 const TOTAL_TASKS = 18;
 const START_DATE = new Date('2026-06-01');
@@ -9,10 +28,178 @@ const NOTIFICATION_TIMES = [
 ];
 
 let deferredPrompt;
+let currentUser = null;
+let unsubscribeSnapshot = null;
+
+// ===== AUTHENTICATION =====
+function showAuthScreen() {
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('mainApp').style.display = 'none';
+}
+
+function showMainApp() {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+}
+
+function showLogin() {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('registerForm').style.display = 'none';
+}
+
+function showRegister() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'block';
+}
+
+async function handleRegister(e) {
+    e.preventDefault();
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    
+    if (password !== confirmPassword) {
+        alert('Parollar mos emas!');
+        return;
+    }
+    
+    if (password.length < 6) {
+        alert('Parol kamida 6 ta belgidan iborat bo\'lishi kerak!');
+        return;
+    }
+    
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log('Ro\'yxatdan o\'tdingiz!', userCredential.user);
+    } catch (error) {
+        console.error('Xato:', error);
+        if (error.code === 'auth/email-already-in-use') {
+            alert('Bu email allaqachon ro\'yxatdan o\'tgan!');
+        } else if (error.code === 'auth/invalid-email') {
+            alert('Noto\'g\'ri email!');
+        } else {
+            alert('Xato: ' + error.message);
+        }
+    }
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('Kirdingiz!', userCredential.user);
+    } catch (error) {
+        console.error('Xato:', error);
+        if (error.code === 'auth/user-not-found') {
+            alert('Bu email ro\'yxatdan o\'tmagan!');
+        } else if (error.code === 'auth/wrong-password') {
+            alert('Noto\'g\'ri parol!');
+        } else if (error.code === 'auth/invalid-email') {
+            alert('Noto\'g\'ri email!');
+        } else {
+            alert('Xato: ' + error.message);
+        }
+    }
+}
+
+async function handleLogout() {
+    try {
+        if (unsubscribeSnapshot) {
+            unsubscribeSnapshot();
+        }
+        await signOut(auth);
+        console.log('Chiqdingiz!');
+    } catch (error) {
+        console.error('Xato:', error);
+        alert('Chiqishda xato: ' + error.message);
+    }
+}
+
+// ===== FIREBASE SYNC =====
+async function syncToFirebase() {
+    if (!currentUser) return;
+    
+    const today = getTodayKey();
+    const dayData = localStorage.getItem(`day_${today}`);
+    
+    if (dayData) {
+        try {
+            const data = JSON.parse(dayData);
+            await setDoc(doc(db, 'users', currentUser.uid, 'days', today), data);
+            console.log('Synced to Firebase:', today);
+        } catch (error) {
+            console.error('Sync error:', error);
+        }
+    }
+}
+
+async function loadFromFirebase() {
+    if (!currentUser) return;
+    
+    try {
+        const daysRef = collection(db, 'users', currentUser.uid, 'days');
+        const snapshot = await getDocs(daysRef);
+        
+        snapshot.forEach(doc => {
+            const dateKey = doc.id;
+            const data = doc.data();
+            localStorage.setItem(`day_${dateKey}`, JSON.stringify(data));
+        });
+        
+        console.log('Loaded from Firebase');
+        
+        // Listen for real-time updates
+        const today = getTodayKey();
+        const docRef = doc(db, 'users', currentUser.uid, 'days', today);
+        
+        unsubscribeSnapshot = onSnapshot(docRef, (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                localStorage.setItem(`day_${today}`, JSON.stringify(data));
+                loadTodayTasks();
+                updateStatistics();
+                updateCalendar();
+                updateMonthlyStats();
+                console.log('Real-time update received');
+            }
+        });
+    } catch (error) {
+        console.error('Load error:', error);
+    }
+}
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
+    // Setup auth listeners
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    document.getElementById('registerForm').addEventListener('submit', handleRegister);
+    document.getElementById('showRegister').addEventListener('click', (e) => {
+        e.preventDefault();
+        showRegister();
+    });
+    document.getElementById('showLogin').addEventListener('click', (e) => {
+        e.preventDefault();
+        showLogin();
+    });
+    document.getElementById('logoutButton').addEventListener('click', handleLogout);
+    
+    // Auth state observer
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('userEmail').textContent = user.email;
+            showMainApp();
+            await loadFromFirebase();
+            initializeApp();
+        } else {
+            currentUser = null;
+            showAuthScreen();
+        }
+    });
+    
     setupEventListeners();
     registerServiceWorker();
     setupPWAInstall();
@@ -101,6 +288,9 @@ function saveTodayTasks() {
     };
     
     localStorage.setItem(`day_${today}`, JSON.stringify(dayData));
+    
+    // Sync to Firebase
+    syncToFirebase();
 }
 
 function loadTodayTasks() {
